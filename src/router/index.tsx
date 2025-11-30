@@ -25,7 +25,7 @@ export default function AppRouter() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute roles={["manager", "vp"]}>
+            <ProtectedRoute roles={["manager_unit", "manager_it", "vp_it"]}>
               <DashboardPage />
             </ProtectedRoute>
           }
@@ -52,7 +52,7 @@ export default function AppRouter() {
         <Route
           path="/manager"
           element={
-            <ProtectedRoute roles={["manager", "vp"]}>
+            <ProtectedRoute roles={["manager_unit", "manager_it", "vp_it"]}>
               <ManagerPage />
             </ProtectedRoute>
           }
@@ -61,7 +61,7 @@ export default function AppRouter() {
         <Route
           path="/vp"
           element={
-            <ProtectedRoute roles={["vp"]}>
+            <ProtectedRoute roles={["vp_it"]}>
               <VPPage />
             </ProtectedRoute>
           }
