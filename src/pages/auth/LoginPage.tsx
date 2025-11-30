@@ -1,20 +1,51 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { mockLogin } from "../../auth/mockAuth";
 import { useAuth } from "../../auth/hooks/useAuth";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, isLoading, error: loginError } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data = await mockLogin(email, password);
-    console.log(data);
-    login(data);
-    navigate(data.role === "user" ? "/requests" : "/dashboard");
+    try {
+      const returnedUser = await login(email, password);
+
+      if (!returnedUser) {
+        // login may set loginError in the hook instead of throwing
+        toast.error((loginError as any)?.message ?? "Login failed");
+        return;
+      }
+
+      toast.success("Welcome back, " + returnedUser.user.name + "!");
+
+      // trace stored auth/session data
+      const saved = localStorage.getItem("authLogin");
+      const token = localStorage.getItem("token");
+      console.log("LoginPage: login success", {
+        saved,
+        token,
+        ctxUser: returnedUser,
+      });
+
+      const data = saved ? JSON.parse(saved) : null;
+      if (data && data.role) {
+        navigate(data.role === "user" ? "/requests" : "/dashboard");
+      }
+
+      // clear sensitive input
+      setPassword("");
+    } catch (err: any) {
+      console.error("Login failed:", err);
+      toast.error(
+        err?.message ?? (loginError as any)?.message ?? "Login failed"
+      );
+    }
   };
   return (
     <>
@@ -42,7 +73,7 @@ const LoginPage = () => {
               <input
                 id="email"
                 name="email"
-                type="email"
+                type="text"
                 required
                 autoComplete="email"
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
@@ -84,12 +115,14 @@ const LoginPage = () => {
           </div>
 
           <div>
-            <button
+            <Button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              disabled={isLoading}
+              aria-busy={isLoading}
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-60"
             >
-              Sign in
-            </button>
+              {isLoading ? "Signing in..." : "Sign in"}
+            </Button>
           </div>
         </form>
 

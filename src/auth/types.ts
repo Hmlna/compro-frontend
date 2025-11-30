@@ -1,12 +1,21 @@
-export type Role = "user" | "manager" | "vp";
+export type Role =
+  | "user"
+  | "manager_unit"
+  | "vp_it"
+  | "manager_it"
+  | "developer";
 
-export interface AuthUser {
+export type AuthUser = {
+  id: number;
   email: string;
   role: Role;
-}
+  unit: string;
+  name: string;
+};
 
-export interface AuthContextType {
+export type AuthContextType = {
   user: AuthUser | null;
-  login: (userData: AuthUser) => void;
+  login: (email: string, password: string) => Promise<AuthUser | null>;
   logout: () => void;
-}
+  isLoading: boolean;
+};
