@@ -1,0 +1,53 @@
+/* wrapper used by TSX */
+.dayPickerContainer {
+  padding: 8px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* react-day-picker elements: use :global to target library classes from a CSS module */
+:global(.rdp) {
+  --rdp-cell-size: 40px; /* custom cell size */
+  font-family: inherit;
+  background: transparent;
+}
+
+/* month/grid container */
+:global(.rdp-month) {
+  padding: 8px;
+}
+
+/* day cells */
+:global(.rdp-day) {
+  width: var(--rdp-cell-size);
+  height: var(--rdp-cell-size);
+  border-radius: 9999px;
+  /* display: inline-flex; */
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+/* hover */
+:global(.rdp-day:hover) {
+  background-color: #f3f4f6; /* tailwind gray-100 */
+}
+
+/* selected */
+:global(.rdp-day_selected),
+:global(.rdp-day[aria-selected="true"]) {
+  background-color: #1d4ed8; /* tailwind blue-700 */
+  color: #fff;
+}
+
+/* today indicator */
+:global(.rdp-day_today),
+:global(.rdp-day[aria-current="date"]) {
+  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.12);
+}
+
+/* optional: nav buttons */
+:global(.rdp-nav) {
+  gap: 8px;
+}
