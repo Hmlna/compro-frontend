@@ -26,8 +26,18 @@ interface SidebarProps {
 
 export default function Sidebar({ children }: SidebarProps) {
   const { logout, user } = useAuth();
-  const [expanded, setExpanded] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Initialize expanded state from localStorage
+  const [expanded, setExpanded] = useState<boolean>(() => {
+    const saved = localStorage.getItem("sidebarExpanded");
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+
+  // Save to localStorage whenever expanded changes
+  useEffect(() => {
+    localStorage.setItem("sidebarExpanded", JSON.stringify(expanded));
+  }, [expanded]);
 
   // Check screen size and update state
   useEffect(() => {
@@ -41,9 +51,10 @@ export default function Sidebar({ children }: SidebarProps) {
       if (mobile && !wasMobile) {
         setExpanded(false);
       }
-      // Auto-expand when switching back to desktop
+      // Restore saved state when switching back to desktop
       if (!mobile && wasMobile) {
-        setExpanded(true);
+        const saved = localStorage.getItem("sidebarExpanded");
+        setExpanded(saved !== null ? JSON.parse(saved) : true);
       }
     };
 
@@ -134,6 +145,8 @@ export default function Sidebar({ children }: SidebarProps) {
                 <h4 className="font-semibold">{user?.email}</h4>
                 <span className="text-xs text-gray-600">
                   role: {user?.role}
+                  <br />
+                  unit: {user?.unit}
                 </span>
               </div>
             </div>
