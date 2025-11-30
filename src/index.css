@@ -4,9 +4,11 @@
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
-  html,
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    overflow-x: hidden;
+    overflow-x: hidden !important;
   }
 }
 
@@ -123,5 +125,9 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  label:has(+ input:required):after {
+    content: " *";
+    color: red;
   }
 }
