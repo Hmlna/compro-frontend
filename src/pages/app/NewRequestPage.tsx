@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Form } from "@/components/ui/form";
-import { RequestBasicInfo } from "@/components/RequestBasicInfo";
-import { RequestDetailedInfo } from "@/components/RequestDetailedInfo";
-import { RequestPreviewDialog } from "@/components/RequestPreviewDialog";
+import { RequestBasicInfo } from "@/components/requests/RequestBasicInfo";
+import { RequestDetailedInfo } from "@/components/requests/RequestDetailedInfo";
+import { RequestPreviewDialog } from "@/components/requests/RequestPreviewDialog";
 import { useRequestForm } from "@/hooks/useRequestForm";
 import { useNavigate } from "react-router";
 import { useState } from "react";
@@ -11,7 +11,7 @@ import type z from "zod";
 import { Button } from "@/components/ui/button";
 import { createRequest } from "@/api/requests/createRequest";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@/auth/hooks/useAuth"; // Import useAuth
+import { useAuth } from "@/hooks/useAuth"; // Import useAuth
 import type { RequestRecord } from "@/types/request"; // Import new type
 
 const NewRequestPage = () => {

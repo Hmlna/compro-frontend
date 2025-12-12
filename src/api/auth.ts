@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { axiosInstance } from "@/api/axios";
-import type { AuthUser } from "@/auth/types";
+import type { AuthUser } from "@/types/auth";
 
 export type LoginResponse = {
   access_token: string;

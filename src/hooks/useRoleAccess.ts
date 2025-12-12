@@ -1,5 +1,5 @@
-import { useAuth } from "./useAuth";
-import type { Role } from "../types";
+import { useAuth } from "@/hooks/useAuth";
+import type { Role } from "@/types/auth";
 
 export function useRoleAccess() {
   const { user } = useAuth();

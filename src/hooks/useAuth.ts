@@ -4,8 +4,8 @@ import {
   apiLogout,
   getUserByToken,
   type LoginResponse,
-} from "../../api/auth";
-import type { AuthUser } from "../types";
+} from "@/api/auth";
+import type { AuthUser } from "@/types/auth";
 
 type LoginArgs = { email: string; password: string };
 
