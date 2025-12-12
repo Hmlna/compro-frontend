@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import type { Control } from "react-hook-form";
 import type { RequestFormSchema } from "@/schema/requestFormSchema";
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "../ui/textarea";
 
 export const RequestDetailedInfo = ({
   control,

@@ -5,7 +5,7 @@ import type { RequestFormSchema } from "@/schema/requestFormSchema";
 import { DataTable } from "@/components/ui/data-table";
 import { Eye, Trash, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router";
-import RequestDetailsDialog from "@/components/RequestDetailsDialog";
+import RequestDetailsDialog from "@/components/requests/RequestDetailsDialog";
 import {
   Tooltip,
   TooltipContent,
@@ -17,7 +17,7 @@ import { axiosInstance } from "@/api/axios";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import type { RequestRecord, RequestStatus } from "@/types/request";
-import { useAuth } from "@/auth/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 
 // Helper for status colors
 const getStatusBadge = (status: RequestStatus) => {
