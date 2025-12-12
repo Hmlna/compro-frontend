@@ -1,15 +1,15 @@
 import { Navigate, Route, Routes } from "react-router";
-import AuthLayout from "../components/layout/AuthLayout";
-import LoginPage from "../pages/auth/LoginPage";
-import RegisterPage from "../pages/auth/RegisterPage";
-import AppLayout from "../components/layout/AppLayout";
-import ProtectedRoute from "../auth/ProtectedRoute";
-import DashboardPage from "../pages/app/DashboardPage";
-import ManagerPage from "../pages/app/ManagerPage";
-import VPPage from "../pages/app/VPPage";
-import NotAuthorized from "../pages/auth/NotAuthorized";
-import RequestPage from "../pages/app/RequestPage";
-import NewRequestPage from "../pages/app/NewRequestPage";
+import AuthLayout from "@/components/layout/AuthLayout";
+import LoginPage from "@/pages/auth/LoginPage";
+import RegisterPage from "@/pages/auth/RegisterPage";
+import AppLayout from "@/components/layout/AppLayout";
+import ProtectedRoute from "@/auth/ProtectedRoute";
+import DashboardPage from "@/pages/app/DashboardPage";
+import ManagerPage from "@/pages/app/ManagerPage";
+import VPPage from "@/pages/app/VPPage";
+import NotAuthorized from "@/pages/auth/NotAuthorized";
+import RequestPage from "@/pages/app/RequestPage";
+import NewRequestPage from "@/pages/app/NewRequestPage";
 
 export default function AppRouter() {
   return (

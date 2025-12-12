@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   requestFormSchema,
   type RequestFormSchema,
-} from "../schema/requestFormSchema";
+} from "@/schema/requestFormSchema";
 import { useEffect } from "react";
 
 const STORAGE_KEY = "requestForm:draft";

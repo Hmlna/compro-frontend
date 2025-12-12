@@ -1,8 +1,8 @@
 import { Outlet, useLocation } from "react-router";
 import { Bell, LayoutDashboard, Library, Plus } from "lucide-react";
 // import { useAuth } from "../../auth/AuthProvider";
-import Sidebar, { SidebarItem } from "./Sidebar";
-import { useRoleAccess } from "../../auth/hooks/useRoleAccess";
+import Sidebar, { SidebarItem } from "@/components/layout/Sidebar";
+import { useRoleAccess } from "@/auth/hooks/useRoleAccess";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 export default function AppLayout() {

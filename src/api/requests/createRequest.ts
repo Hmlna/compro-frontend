@@ -1,5 +1,5 @@
 import type { RequestFormSchema } from "@/schema/requestFormSchema";
-import { axiosInstance } from "../axios";
+import { axiosInstance } from "@/api/axios";
 
 type CreateRequestResponse = RequestFormSchema;
 export const createRequest = async (request: CreateRequestResponse) => {

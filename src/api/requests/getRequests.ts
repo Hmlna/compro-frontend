@@ -1,4 +1,4 @@
-import { axiosInstance } from "../axios";
+import { axiosInstance } from "@/api/axios";
 
 export const getRequestsbyCreatedById = async (userId?: number | string) => {
   // If userId is provided, filter by it.

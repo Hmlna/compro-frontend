@@ -9,7 +9,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
-import type { RequestFormSchema } from "../schema/requestFormSchema";
+import type { RequestFormSchema } from "@/schema/requestFormSchema";
 
 export const RequestPreviewDialog = ({
   open,
