@@ -1,55 +1,88 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/input";
+
+const loginFormSchema = z.object({
+  email: z.email("Invalid email address"),
+  password: z.string().min(1, "Password is required"),
+});
+
+type LoginFormSchema = z.infer<typeof loginFormSchema>;
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login, isLoading, error: loginError } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { login, isLoading } = useAuth();
+  const [params] = useSearchParams();
+  const loggedOut = params.get("logged_out") === "1";
+  const [showLogoutMsg, setShowLogoutMsg] = useState(loggedOut);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const form = useForm<LoginFormSchema>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const { handleSubmit, control } = form;
+
+  useEffect(() => {
+    if (!loggedOut) return;
+
+    const cleanUrl = new URL(window.location.href);
+    cleanUrl.searchParams.delete("logged_out");
+    window.history.replaceState({}, "", cleanUrl.toString());
+
+    const t = setTimeout(() => setShowLogoutMsg(false), 3000);
+
+    return () => clearTimeout(t);
+  }, [loggedOut]);
+
+  const onSubmit = handleSubmit(async (values) => {
     try {
-      const returnedUser = await login(email, password);
+      const result = await login(values.email, values.password);
 
-      if (!returnedUser) {
-        // login may set loginError in the hook instead of throwing
-        toast.error((loginError as any)?.message ?? "Login failed");
-        return;
+      toast.success(`Welcome back, ${result.user.name}!`);
+
+      if (result.user.role === "USER") {
+        navigate("/requests");
+      } else if (result.user.role === "DEV") {
+        navigate("/developer");
+      } else {
+        navigate("/dashboard");
       }
-
-      toast.success("Welcome back, " + returnedUser.user.name + "!");
-
-      // trace stored auth/session data
-      const saved = localStorage.getItem("authLogin");
-      const token = localStorage.getItem("token");
-      console.log("LoginPage: login success", {
-        saved,
-        token,
-        ctxUser: returnedUser,
-      });
-
-      const data = saved ? JSON.parse(saved) : null;
-      if (data && data.role) {
-        navigate(data.role === "user" ? "/requests" : "/dashboard");
-      }
-
-      // clear sensitive input
-      setPassword("");
     } catch (err: any) {
       console.error("Login failed:", err);
       toast.error(
-        err?.message ?? (loginError as any)?.message ?? "Login failed"
+        err?.response?.data?.message || err?.message || "Login failed"
       );
     }
-  };
+  });
+
   return (
     <>
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        {showLogoutMsg && (
+          <div className="mb-4 rounded-md bg-red-50 p-3 text-red-800 text-sm border border-red-200">
+            You’ve been logged out.
+          </div>
+        )}
+
         <img
           alt="Your Company"
           src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
@@ -61,73 +94,55 @@ const LoginPage = () => {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm/6 font-medium text-gray-900"
-            >
-              Email address
-            </label>
-            <div className="mt-2">
-              <input
-                id="email"
-                name="email"
-                type="text"
-                required
-                autoComplete="email"
-                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-          </div>
+        <Form {...form}>
+          <form onSubmit={onSubmit} className="space-y-6">
+            <FormField
+              control={control}
+              name="email"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Email Address</FormLabel>
+                    <FormControl>
+                      <Input type="email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
 
-          <div>
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="password"
-                className="block text-sm/6 font-medium text-gray-900"
+            <FormField
+              control={control}
+              name="password"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+
+            <div>
+              <Button
+                type="submit"
+                disabled={isLoading}
+                aria-busy={isLoading}
+                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-60"
               >
-                Password
-              </label>
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
-                >
-                  Forgot password?
-                </a>
-              </div>
+                {isLoading ? "Signing in..." : "Sign in"}
+              </Button>
             </div>
-            <div className="mt-2">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                autoComplete="current-password"
-                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-          </div>
+          </form>
+        </Form>
 
-          <div>
-            <Button
-              type="submit"
-              disabled={isLoading}
-              aria-busy={isLoading}
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-60"
-            >
-              {isLoading ? "Signing in..." : "Sign in"}
-            </Button>
-          </div>
-        </form>
-
-        <p className="mt-2 text-right text-sm/6 text-gray-500">
-          Dont have an account?{" "}
+        <p className="mt-4 text-center text-sm text-gray-500">
+          Don't have an account?{" "}
           <Link
             to="/register"
             className="font-semibold text-indigo-600 hover:text-indigo-500"

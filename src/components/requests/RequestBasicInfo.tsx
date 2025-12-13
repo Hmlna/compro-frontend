@@ -14,13 +14,21 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 import { useFormContext, type Control } from "react-hook-form";
 import type { RequestFormSchema } from "../../schema/requestFormSchema";
 import DayPickerWrapper from "../ui/DatePicker/DayPickerWrapper";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query"; // Import useQuery
-import { getManagerByUnit } from "@/api/auth"; // Import the helper
+import { getUsersbyRole } from "@/api/users";
+// import { getManagerByUnit } from "@/api/auth"; // Import the helper
 
 export const RequestBasicInfo = ({
   control,
@@ -31,11 +39,13 @@ export const RequestBasicInfo = ({
   const { setValue } = useFormContext<RequestFormSchema>();
 
   // Fetch manager based on user's unit
-  const { data: manager } = useQuery({
-    queryKey: ["manager", user?.unit],
-    queryFn: () => (user?.unit ? getManagerByUnit(user.unit) : null),
-    enabled: !!user?.unit, // Only run if user has a unit
-    staleTime: 1000 * 60 * 5, // Cache for 5 mins
+  const { data: managers } = useQuery({
+    queryKey: ["managers", user?.division],
+    queryFn: () =>
+      user?.division
+        ? getUsersbyRole({ role: "MANAGER", division: user.division })
+        : [],
+    enabled: !!user?.division,
   });
 
   useEffect(() => {
@@ -44,16 +54,11 @@ export const RequestBasicInfo = ({
       setValue("proposers1", (user.name as string) || "");
 
       // 2. Set Business Area (User's Unit)
-      if (user.unit) {
-        setValue("businessArea", user.unit);
+      if (user.division) {
+        setValue("businessArea", user.division);
       }
     }
-
-    // 3. Set Proposer 2 (Manager of the Unit)
-    if (manager) {
-      setValue("proposers2", manager.name);
-    }
-  }, [user, manager, setValue]);
+  }, [user, setValue]);
 
   // Small inner component for the date input + calendar popover
   const DateInput = ({ field }: { field: any }) => {
@@ -158,19 +163,31 @@ export const RequestBasicInfo = ({
             name="proposers2"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Proposers 2 (your manager)</FormLabel>
+                <FormLabel>Proposer 2</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    readOnly
-                    aria-readonly="true"
-                    className="bg-muted caret-transparent focus:outline-none"
-                  />
+                  <Select
+                    value={field.value}
+                    onValueChange={(v) => field.onChange(v)}
+                    disabled={!managers}
+                  >
+                    <SelectTrigger className="mt-2 w-full">
+                      <SelectValue placeholder="Choose manager" />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      {managers?.map((m) => (
+                        <SelectItem key={m.id} value={m.name}>
+                          {m.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={control}
             name="businessArea"

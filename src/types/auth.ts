@@ -1,16 +1,20 @@
-export type Role =
-  | "user"
-  | "manager_unit"
-  | "vp_it"
-  | "manager_it"
-  | "developer";
+export type Role = "USER" | "MANAGER" | "VP" | "MANAGER_IT" | "DEV";
+export const ROLE_OPTIONS: Role[] = [
+  "USER",
+  "MANAGER",
+  "VP",
+  "MANAGER_IT",
+  "DEV",
+];
 
 export type AuthUser = {
-  id: number;
+  id: string; // UUID from API
   email: string;
   role: Role;
-  unit: string;
+  division?: string;
   name: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type AuthContextType = {

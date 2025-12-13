@@ -8,10 +8,12 @@ export function useRoleAccess() {
     return !!user?.role && roles.includes(user.role);
   };
 
-  const canAccessDashboard = hasRole(["manager_unit", "manager_it", "vp_it"]);
-  const canAccessRequests = hasRole(["user"]);
-  const canAccessManager = hasRole(["manager_unit", "manager_it"]);
-  const canAccessVP = hasRole(["vp_it"]);
+  const canAccessDashboard = hasRole(["MANAGER", "MANAGER_IT", "VP"]);
+  const canAccessRequests = hasRole(["USER"]);
+  const canAccessManager = hasRole(["MANAGER"]);
+  const canAccessVP = hasRole(["VP"]);
+  const canAccessMapping = hasRole(["MANAGER_IT"]);
+  const canAccessDev = hasRole(["DEV"]);
 
   return {
     hasRole,
@@ -19,5 +21,7 @@ export function useRoleAccess() {
     canAccessRequests,
     canAccessManager,
     canAccessVP,
+    canAccessMapping,
+    canAccessDev,
   };
 }
