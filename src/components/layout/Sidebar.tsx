@@ -6,9 +6,21 @@ import {
   useState,
   useEffect,
   type ReactNode,
+  useRef,
 } from "react";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { useAuth } from "@/hooks/useAuth";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 type SidebarContextType = {
   expanded: boolean;
@@ -27,6 +39,9 @@ interface SidebarProps {
 export default function Sidebar({ children }: SidebarProps) {
   const { logout, user } = useAuth();
   const [isMobile, setIsMobile] = useState(false);
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+  const sidebarRef = useRef<HTMLElement | null>(null);
+  const navigate = useNavigate();
 
   // Initialize expanded state from localStorage
   const [expanded, setExpanded] = useState<boolean>(() => {
@@ -68,15 +83,20 @@ export default function Sidebar({ children }: SidebarProps) {
     if (!isMobile || !expanded) return;
 
     const handleClickOutside = (e: MouseEvent) => {
-      const sidebar = document.getElementById("sidebar");
-      if (sidebar && !sidebar.contains(e.target as Node)) {
+      const sidebarEl = sidebarRef.current;
+      const target = e.target as Node;
+
+      // If logout dialog is open, ignore outside clicks (don't close sidebar)
+      if (isLogoutDialogOpen) return;
+
+      if (sidebarEl && !sidebarEl.contains(target)) {
         setExpanded(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isMobile, expanded]);
+  }, [isMobile, expanded, isLogoutDialogOpen]);
 
   return (
     <>
@@ -146,17 +166,47 @@ export default function Sidebar({ children }: SidebarProps) {
                 <span className="text-xs text-gray-600">
                   role: {user?.role}
                   <br />
-                  unit: {user?.unit}
+                  unit: {user?.division}
                 </span>
               </div>
             </div>
-            <button
-              onClick={logout}
-              className="p-1 rounded hover:bg-gray-100 text-red-500 transition-colors cursor-pointer"
-              title="Log out"
+            <AlertDialog
+              open={isLogoutDialogOpen}
+              onOpenChange={setIsLogoutDialogOpen}
             >
-              <LogOut size={20} />
-            </button>
+              <AlertDialogTrigger asChild>
+                <button
+                  className="p-1 rounded hover:bg-gray-100 text-red-500 transition-colors cursor-pointer"
+                  title="Log out"
+                >
+                  <LogOut size={20} />
+                </button>
+              </AlertDialogTrigger>
+
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Are you sure you want to log out?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action will end your current session.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      logout();
+                      navigate("/login?logged_out=1", { replace: true });
+                    }}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    Log out
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </nav>
       </aside>

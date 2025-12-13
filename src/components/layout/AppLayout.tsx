@@ -2,7 +2,7 @@ import { Outlet, useLocation } from "react-router";
 import { Bell, LayoutDashboard, Library, Plus } from "lucide-react";
 // import { useAuth } from "../../auth/AuthProvider";
 import Sidebar, { SidebarItem } from "@/components/layout/Sidebar";
-import { useRoleAccess } from "@/auth/hooks/useRoleAccess";
+import { useRoleAccess } from "@/hooks/useRoleAccess";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 export default function AppLayout() {
@@ -13,6 +13,8 @@ export default function AppLayout() {
     canAccessRequests,
     canAccessManager,
     canAccessVP,
+    canAccessMapping,
+    canAccessDev,
   } = useRoleAccess();
 
   const getPageTitle = () => {
@@ -67,6 +69,20 @@ export default function AppLayout() {
               icon={<LayoutDashboard size={20} />}
               text="VP"
               to="/vp"
+            />
+          )}
+          {canAccessMapping && (
+            <SidebarItem
+              icon={<LayoutDashboard size={20} />}
+              text="Mapping"
+              to="/mapping"
+            />
+          )}
+          {canAccessDev && (
+            <SidebarItem
+              icon={<LayoutDashboard size={20} />}
+              text="Dev"
+              to="/developer"
             />
           )}
         </Sidebar>

@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import styles from "@/components/DatePicker/DayPickerWrapper.module.css";
+import styles from "@/components/ui/DatePicker/DayPickerWrapper.module.css";
 
 interface DayPickerWrapperProps {
   onDateSelect?: (date?: Date) => void;
