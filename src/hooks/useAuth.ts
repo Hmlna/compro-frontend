@@ -35,7 +35,6 @@ export function useAuth() {
       return saved ? (JSON.parse(saved) as AuthUser) : undefined;
     },
     retry: false,
-    enabled: !!token,
     staleTime: 5 * 60 * 1000,
   });
 
@@ -65,6 +64,8 @@ export function useAuth() {
     onSuccess: () => {
       localStorage.removeItem("token");
       localStorage.removeItem("authLogin");
+      localStorage.clear();
+      qc.clear();
 
       console.log("Logout successful");
       qc.setQueryData(["currentUser"], null);

@@ -8,7 +8,13 @@ export function useRoleAccess() {
     return !!user?.role && roles.includes(user.role);
   };
 
-  const canAccessDashboard = hasRole(["MANAGER", "MANAGER_IT", "VP"]);
+  const canAccessDashboard = hasRole([
+    "USER",
+    "MANAGER",
+    "MANAGER_IT",
+    "VP",
+    "DEV",
+  ]);
   const canAccessRequests = hasRole(["USER"]);
   const canAccessManager = hasRole(["MANAGER"]);
   const canAccessVP = hasRole(["VP"]);

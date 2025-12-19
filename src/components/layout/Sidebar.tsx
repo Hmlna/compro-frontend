@@ -8,7 +8,7 @@ import {
   type ReactNode,
   useRef,
 } from "react";
-import { NavLink, useNavigate } from "react-router";
+import { NavLink } from "react-router";
 import { useAuth } from "@/hooks/useAuth";
 import {
   AlertDialog,
@@ -41,7 +41,7 @@ export default function Sidebar({ children }: SidebarProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const sidebarRef = useRef<HTMLElement | null>(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // Initialize expanded state from localStorage
   const [expanded, setExpanded] = useState<boolean>(() => {
@@ -198,7 +198,8 @@ export default function Sidebar({ children }: SidebarProps) {
                   <AlertDialogAction
                     onClick={() => {
                       logout();
-                      navigate("/login?logged_out=1", { replace: true });
+                      // navigate("/login?logged_out=1", { replace: true });
+                      window.location.replace("/login?logged_out=1");
                     }}
                     className="bg-red-600 hover:bg-red-700"
                   >

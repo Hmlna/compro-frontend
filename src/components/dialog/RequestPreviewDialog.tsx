@@ -28,8 +28,8 @@ export const RequestPreviewDialog = ({
 }) => {
   // keys we consider "basic"
   const basicKeys: (keyof RequestFormSchema)[] = [
-    "proposers1",
-    "proposers2",
+    "requester1",
+    "requester2",
     "businessArea",
     "targetDate",
     "title",
@@ -72,10 +72,10 @@ export const RequestPreviewDialog = ({
 
         <AlertDialogFooter>
           <AlertDialogCancel disabled={confirmDisabled}>
-            Continue Editing
+            Continue editing
           </AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm} disabled={confirmDisabled}>
-            {confirmDisabled ? "Submitting..." : "Submit Request"}
+            {confirmDisabled ? "Submitting..." : "Submit request"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "react-router";
+import { Outlet } from "react-router";
 import { Bell, LayoutDashboard, Library, Plus } from "lucide-react";
 // import { useAuth } from "../../auth/AuthProvider";
 import Sidebar, { SidebarItem } from "@/components/layout/Sidebar";
@@ -7,7 +7,6 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 export default function AppLayout() {
   // const { user } = useAuth();
-  const location = useLocation();
   const {
     canAccessDashboard,
     canAccessRequests,
@@ -16,16 +15,6 @@ export default function AppLayout() {
     canAccessMapping,
     canAccessDev,
   } = useRoleAccess();
-
-  const getPageTitle = () => {
-    const path = location.pathname;
-    if (path.includes("/dashboard")) return "Dashboard";
-    // if (path.includes("/new-request")) return "New Request";
-    // if (path.includes("/requests")) return "Requests";
-    // if (path.includes("/manager")) return "Manager";
-    // if (path.includes("/vp")) return "VP";
-    return "";
-  };
 
   function handleNotification() {
     alert("Notification clicked");
@@ -93,7 +82,7 @@ export default function AppLayout() {
           <header className="bg-white border-b border-gray-200 px-6 py-5 sticky top-0 z-30 pl-16 md:pl-6">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold text-gray-800">
-                {getPageTitle()}
+                {/* {getPageTitle()} */}
               </h2>
               <div className="w-auto mr-5">
                 <button onClick={handleNotification} className="cursor-pointer">

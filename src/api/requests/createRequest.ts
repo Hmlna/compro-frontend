@@ -1,8 +1,7 @@
-import type { RequestFormSchema } from "@/schema/requestFormSchema";
 import { axiosInstance } from "@/api/axios";
+import type { CreateRequestPayload } from "@/types/request";
 
-type CreateRequestResponse = RequestFormSchema;
-export const createRequest = async (request: CreateRequestResponse) => {
-  const response = await axiosInstance.post("/requests", request);
+export const createRequest = async (request: CreateRequestPayload) => {
+  const response = await axiosInstance.post("/tickets", request);
   return response.data;
 };

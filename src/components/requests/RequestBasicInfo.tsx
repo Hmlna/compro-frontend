@@ -21,14 +21,13 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import { useFormContext, type Control } from "react-hook-form";
+import { useFormContext, useWatch, type Control } from "react-hook-form";
 import type { RequestFormSchema } from "../../schema/requestFormSchema";
 import DayPickerWrapper from "../ui/DatePicker/DayPickerWrapper";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useQuery } from "@tanstack/react-query"; // Import useQuery
+import { useQuery } from "@tanstack/react-query";
 import { getUsersbyRole } from "@/api/users";
-// import { getManagerByUnit } from "@/api/auth"; // Import the helper
 
 export const RequestBasicInfo = ({
   control,
@@ -36,31 +35,32 @@ export const RequestBasicInfo = ({
   control: Control<RequestFormSchema>;
 }) => {
   const { user } = useAuth();
-  const { setValue } = useFormContext<RequestFormSchema>();
+  const { setValue, getValues } = useFormContext<RequestFormSchema>();
 
-  // Fetch manager based on user's unit
-  const { data: managers } = useQuery({
-    queryKey: ["managers", user?.division],
+  const businessArea = useWatch({ control, name: "businessArea" });
+
+  const { data: managers, isLoading: isManagersLoading } = useQuery({
+    queryKey: ["managers", businessArea],
     queryFn: () =>
-      user?.division
-        ? getUsersbyRole({ role: "MANAGER", division: user.division })
+      businessArea
+        ? getUsersbyRole({ role: "MANAGER", division: businessArea })
         : [],
-    enabled: !!user?.division,
+    enabled: !!businessArea,
   });
 
   useEffect(() => {
     if (user) {
-      // 1. Set Proposer 1 (Current User)
-      setValue("proposers1", (user.name as string) || "");
-
-      // 2. Set Business Area (User's Unit)
-      if (user.division) {
+      const currentRequester = getValues("requester1");
+      if (!currentRequester) {
+        setValue("requester1", (user.name as string) || "");
+      }
+      const currentArea = getValues("businessArea");
+      if (!currentArea && user.division) {
         setValue("businessArea", user.division);
       }
     }
-  }, [user, setValue]);
+  }, [user, setValue, getValues]);
 
-  // Small inner component for the date input + calendar popover
   const DateInput = ({ field }: { field: any }) => {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement | null>(null);
@@ -76,7 +76,6 @@ export const RequestBasicInfo = ({
         document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    // parse existing value (assumes YYYY-MM-DD or Date)
     const initialDate =
       field.value instanceof Date
         ? field.value
@@ -84,17 +83,16 @@ export const RequestBasicInfo = ({
           /^\d{4}-\d{2}-\d{2}$/.test(field.value)
         ? (() => {
             const [y, m, d] = field.value.split("-").map(Number);
-            return new Date(y, m - 1, d); // local date
+            return new Date(y, m - 1, d);
           })()
         : undefined;
 
     const handleSelect = (date?: Date) => {
       if (date) {
-        // format using local date parts to avoid timezone shift
         const yyyy = date.getFullYear();
         const mm = String(date.getMonth() + 1).padStart(2, "0");
         const dd = String(date.getDate()).padStart(2, "0");
-        const isoDate = `${yyyy}-${mm}-${dd}`; // local YYYY-MM-DD
+        const isoDate = `${yyyy}-${mm}-${dd}`;
         field.onChange(isoDate);
       } else {
         field.onChange(undefined);
@@ -128,6 +126,15 @@ export const RequestBasicInfo = ({
     );
   };
 
+  const StaticField = ({ label, value }: { label: string; value: string }) => (
+    <FormItem>
+      <FormLabel>{label}</FormLabel>
+      <div className="flex h-10 w-full items-center rounded-md border border-input bg-muted/20 px-3 py-2 text-sm text-foreground">
+        {value}
+      </div>
+    </FormItem>
+  );
+
   return (
     <Card>
       <CardHeader>
@@ -138,40 +145,38 @@ export const RequestBasicInfo = ({
       </CardHeader>
 
       <CardContent className="space-y-4">
+        {/* ROW 1: Identity & Routing */}
         <div className="grid gap-4 md:grid-cols-3">
-          <FormField
-            control={control}
-            name="proposers1"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Proposer 1 (you)</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    readOnly
-                    aria-readonly="true"
-                    className="bg-muted caret-transparent focus:outline-none"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+          <StaticField
+            label="Requester 1 (You)"
+            value={getValues("requester1") || user?.name || "-"}
+          />
+
+          <StaticField
+            label="Unit"
+            value={getValues("businessArea") || user?.division || "-"}
           />
 
           <FormField
             control={control}
-            name="proposers2"
+            name="requester2"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Proposer 2</FormLabel>
+                <FormLabel>Requester 2</FormLabel>
+
                 <FormControl>
                   <Select
+                    onValueChange={field.onChange}
                     value={field.value}
-                    onValueChange={(v) => field.onChange(v)}
-                    disabled={!managers}
+                    disabled={isManagersLoading && !managers}
+                    key={`${field.value || "empty"}-${
+                      managers?.length || "loading"
+                    }`}
                   >
                     <SelectTrigger className="mt-2 w-full">
-                      <SelectValue placeholder="Choose manager" />
+                      <SelectValue placeholder="Choose manager">
+                        {field.value ? field.value : "Choose manager"}
+                      </SelectValue>
                     </SelectTrigger>
 
                     <SelectContent>
@@ -180,61 +185,59 @@ export const RequestBasicInfo = ({
                           {m.name}
                         </SelectItem>
                       ))}
+                      {field.value &&
+                        managers &&
+                        !managers.some((m) => m.name === field.value) && (
+                          <SelectItem
+                            value={field.value}
+                            className="hidden"
+                            style={{ display: "none" }}
+                          >
+                            {field.value}
+                          </SelectItem>
+                        )}
                     </SelectContent>
                   </Select>
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
-          <FormField
-            control={control}
-            name="businessArea"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Your Business Area</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    readOnly
-                    aria-readonly="true"
-                    className="bg-muted caret-transparent focus:outline-none"
-                  />
-                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <FormField
-            control={control}
-            name="targetDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Target Date *</FormLabel>
-                <FormControl>
-                  <DateInput field={field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Project Title *</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Title of the project" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        {/* ROW 2: Project Details */}
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="md:col-span-2">
+            <FormField
+              control={control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Project Title</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Title of the project" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="md:col-span-1">
+            <FormField
+              control={control}
+              name="targetDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Target Date</FormLabel>
+                  <FormControl>
+                    <DateInput field={field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
       </CardContent>
     </Card>
