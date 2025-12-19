@@ -1,10 +1,29 @@
 import { axiosInstance } from "@/api/axios";
+import type {
+  GetRequestsParams,
+  GetRequestsResponse,
+  RequestDetail,
+} from "@/types/request";
 
-export const getRequestsbyCreatedById = async (userId?: number | string) => {
-  // If userId is provided, filter by it.
-  // We cast to String() to ensure it matches the string IDs in mock-db.json
-  const params = userId ? { createdById: String(userId) } : {};
-
-  const response = await axiosInstance.get("/requests", { params });
+export const getRequest = async (
+  params: GetRequestsParams
+): Promise<GetRequestsResponse> => {
+  const response = await axiosInstance.get("/tickets", {
+    params: {
+      page: params.page || 1,
+      limit: params.limit || 10,
+      status: params.status || undefined,
+      sortBy: params.sortBy || "createdAt",
+      sortOrder: params.sortOrder || "desc",
+      search: params.search || undefined,
+    },
+  });
   return response.data;
+};
+
+export const getRequestById = async (id: string): Promise<RequestDetail> => {
+  const res = await axiosInstance.get(`/tickets/${id}`);
+  // Based on your GetRequestByIdResponse type:
+  // { success: true, message: "...", data: { ... } }
+  return res.data.data;
 };

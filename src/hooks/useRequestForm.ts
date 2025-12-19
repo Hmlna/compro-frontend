@@ -9,30 +9,32 @@ import { useEffect } from "react";
 
 const STORAGE_KEY = "requestForm:draft";
 
-export const useRequestForm = () => {
+export const useRequestForm = (isEditMode = false) => {
   const initialDefaults: RequestFormSchema = {
     targetDate: "",
     title: "",
-    proposers1: "",
-    proposers2: "",
+    requester1: "",
+    requester2: "",
     businessArea: "",
-    impactCategory: "",
+    categoryImpact: "",
     impactDescription: "",
     background: "",
     objective: "",
-    service: "",
-    requiredService: "",
+    serviceExplanation: "",
+    servicesNeeded: "",
   };
 
   // hydrate from localStorage if available
   let saved: Partial<RequestFormSchema> | null = null;
-  try {
-    if (typeof window !== "undefined") {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      saved = raw ? (JSON.parse(raw) as Partial<RequestFormSchema>) : null;
+  if (!isEditMode) {
+    try {
+      if (typeof window !== "undefined") {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        saved = raw ? (JSON.parse(raw) as Partial<RequestFormSchema>) : null;
+      }
+    } catch {
+      saved = null;
     }
-  } catch {
-    saved = null;
   }
 
   const form = useForm<RequestFormSchema>({
@@ -44,22 +46,26 @@ export const useRequestForm = () => {
 
   // autosave (debounced)
   useEffect(() => {
-    let t: ReturnType<typeof setTimeout> | null = null;
+    if (isEditMode) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let t: any = null;
     const sub = form.watch((values) => {
       if (t) clearTimeout(t);
       t = setTimeout(() => {
         try {
+          // We intentionally don't do complex transformation here,
+          // we handle the "read" side in the hydration step above.
           localStorage.setItem(STORAGE_KEY, JSON.stringify(values));
         } catch {
           /* ignore */
         }
-      }, 300);
+      }, 500); // Increased debounce to prevent rapid-fire saves
     });
     return () => {
       sub.unsubscribe();
       if (t) clearTimeout(t);
     };
-  }, [form]);
+  }, [form, isEditMode]);
 
   const clearDraft = () => {
     try {
@@ -67,6 +73,7 @@ export const useRequestForm = () => {
     } catch {
       /* empty */
     }
+    // Hard reset the form to initial defaults
     form.reset(initialDefaults);
   };
 

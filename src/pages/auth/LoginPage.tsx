@@ -61,8 +61,6 @@ const LoginPage = () => {
 
       if (result.user.role === "USER") {
         navigate("/requests");
-      } else if (result.user.role === "DEV") {
-        navigate("/developer");
       } else {
         navigate("/dashboard");
       }

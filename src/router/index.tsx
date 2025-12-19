@@ -8,10 +8,11 @@ import DashboardPage from "@/pages/app/DashboardPage";
 import ManagerPage from "@/pages/app/ManagerPage";
 import VPPage from "@/pages/app/VPPage";
 import NotAuthorized from "@/pages/auth/NotAuthorized";
-import RequestPage from "@/pages/app/RequestPage";
-import NewRequestPage from "@/pages/app/NewRequestPage";
+import RequestPage from "@/pages/app/requests/RequestPage";
+import NewRequestPage from "@/pages/app/requests/NewRequestPage";
 import { MappingPage } from "@/pages/app/MappingPage";
 import { DeveloperPage } from "@/pages/app/DeveloperPage";
+import RequestDetailPage from "@/pages/app/requests/RequestDetailPage";
 
 export default function AppRouter() {
   return (
@@ -27,7 +28,9 @@ export default function AppRouter() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute roles={["MANAGER", "MANAGER_IT", "VP"]}>
+            <ProtectedRoute
+              roles={["USER", "MANAGER", "MANAGER_IT", "VP", "DEV"]}
+            >
               <DashboardPage />
             </ProtectedRoute>
           }
@@ -38,6 +41,26 @@ export default function AppRouter() {
           element={
             <ProtectedRoute roles={["USER"]}>
               <NewRequestPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/requests/edit/:id"
+          element={
+            <ProtectedRoute roles={["USER"]}>
+              <NewRequestPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/requests/:id"
+          element={
+            <ProtectedRoute
+              roles={["USER", "MANAGER", "MANAGER_IT", "VP", "DEV"]}
+            >
+              <RequestDetailPage />
             </ProtectedRoute>
           }
         />

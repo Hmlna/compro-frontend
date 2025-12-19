@@ -5,6 +5,8 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
+  type PaginationState,
+  type OnChangeFn,
   type Table as RTTable,
 } from "@tanstack/react-table";
 import {
@@ -20,32 +22,50 @@ import { Button } from "@/components/ui/button";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  initialPageSize?: number;
+  rowCount?: number;
+  pagination?: PaginationState;
+  onPaginationChange?: OnChangeFn<PaginationState>;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  initialPageSize = 10,
+  rowCount,
+  pagination,
+  onPaginationChange,
 }: DataTableProps<TData, TValue>) {
+  const isServerSide = rowCount !== undefined;
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    initialState: { pagination: { pageSize: initialPageSize } },
+
+    manualPagination: isServerSide,
+    rowCount: rowCount,
+    state: {
+      ...(isServerSide && pagination ? { pagination } : {}),
+    },
+    onPaginationChange: onPaginationChange,
+
+    initialState: {
+      pagination: { pageSize: 10 },
+    },
   });
 
   return (
     <div className="w-full">
-      {/* Responsive table with horizontal scroll */}
       <div className="overflow-x-auto rounded-md border">
-        <Table>
+        <Table className="sm:table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className="bg-muted/50 text-black font-bold"
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -89,24 +109,23 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      {/* Pagination controls - Shadcn style */}
+      {/* Pagination Controls */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
         <div className="text-sm text-muted-foreground">
-          {/* Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()} */}
           {"Showing "}
-          {data.length > 0 ? (
+          {table.getRowModel().rows?.length ? (
             <>
               {table.getState().pagination.pageIndex *
                 table.getState().pagination.pageSize +
                 1}
               {" to "}
+              {/* Logic: if server-side, calculate based on page size. If client-side, limit by data length */}
               {Math.min(
-                data.length,
                 (table.getState().pagination.pageIndex + 1) *
-                  table.getState().pagination.pageSize
+                  table.getState().pagination.pageSize,
+                table.getRowCount()
               )}{" "}
-              of {data.length} row(s)
+              of {table.getRowCount()} row(s)
             </>
           ) : (
             "0 row(s)"
