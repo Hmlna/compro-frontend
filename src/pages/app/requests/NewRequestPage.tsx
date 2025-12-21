@@ -159,12 +159,15 @@ const NewRequestPage = () => {
 
       // Submit or resubmit
       if (actionType === "submit" && activeId) {
+        const toastId = toast.loading("Processing...");
         try {
           if (isResubmitMode) {
             await resubmitMutation.mutateAsync(activeId);
+            toast.dismiss(toastId);
             toast.success("Request revised and resubmitted successfully!");
           } else {
             await submitMutation.mutateAsync(activeId);
+            toast.dismiss(toastId);
             toast.success("Request submitted successfully!");
           }
         } catch (error) {
