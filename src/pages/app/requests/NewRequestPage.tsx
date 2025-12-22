@@ -19,6 +19,7 @@ import { uploadDocument } from "@/api/requests/uploadDocument";
 import { deleteDocument } from "@/api/requests/deleteDocument";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import { resubmitRequest } from "@/api/requests/resubmitRequests";
+import { FormAssistantChatbot } from "@/components/FormAssistantChatbot";
 
 const NewRequestPage = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -292,7 +293,7 @@ const NewRequestPage = () => {
             </div>
           )}
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-end sm:mr-20">
             <Button
               type="submit"
               variant="secondary"
@@ -311,7 +312,7 @@ const NewRequestPage = () => {
             <Button
               type="button"
               variant="default"
-              className=" w-full sm:w-auto"
+              className="w-full sm:w-auto"
               disabled={
                 createMutation.isPending ||
                 updateMutation.isPending ||
@@ -341,6 +342,8 @@ const NewRequestPage = () => {
         onConfirm={handleDialogConfirm}
         confirmDisabled={createMutation.isPending || updateMutation.isPending}
       />
+
+      <FormAssistantChatbot />
     </div>
   );
 };
