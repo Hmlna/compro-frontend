@@ -57,7 +57,7 @@ const LoginPage = () => {
     try {
       const result = await login(values.email, values.password);
 
-      toast.success(`Welcome back, ${result.user.name}!`);
+      toast.success(`Welcome, ${result.user.name}!`);
 
       if (result.user.role === "USER") {
         navigate("/requests");
@@ -65,10 +65,8 @@ const LoginPage = () => {
         navigate("/dashboard");
       }
     } catch (err: any) {
-      console.error("Login failed:", err);
-      toast.error(
-        err?.response?.data?.message || err?.message || "Login failed"
-      );
+      toast.error("Wrong email or password");
+      console.error(err);
     }
   });
 
@@ -81,11 +79,6 @@ const LoginPage = () => {
           </div>
         )}
 
-        <img
-          alt="Your Company"
-          src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-          className="mx-auto h-10 w-auto"
-        />
         <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
           Sign in to your account
         </h2>
@@ -131,7 +124,7 @@ const LoginPage = () => {
                 type="submit"
                 disabled={isLoading}
                 aria-busy={isLoading}
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-60"
+                className="flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60"
               >
                 {isLoading ? "Signing in..." : "Sign in"}
               </Button>
@@ -143,9 +136,9 @@ const LoginPage = () => {
           Don't have an account?{" "}
           <Link
             to="/register"
-            className="font-semibold text-indigo-600 hover:text-indigo-500"
+            className="font-semibold text-blue-700 hover:text-blue-500"
           >
-            Sign Up
+            Sign up
           </Link>
         </p>
       </div>

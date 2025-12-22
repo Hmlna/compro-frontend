@@ -23,7 +23,5 @@ export const getRequest = async (
 
 export const getRequestById = async (id: string): Promise<RequestDetail> => {
   const res = await axiosInstance.get(`/tickets/${id}`);
-  // Based on your GetRequestByIdResponse type:
-  // { success: true, message: "...", data: { ... } }
   return res.data.data;
 };
