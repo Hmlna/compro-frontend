@@ -77,7 +77,6 @@ export const useNotifications = (userId: string) => {
       return { previousList, previousUnread };
     },
     onError: (_err, _newTodo, context) => {
-      // Rollback on error
       if (context?.previousList)
         queryClient.setQueryData(KEYS.list, context.previousList);
       if (context?.previousUnread)
@@ -130,7 +129,6 @@ export const useNotifications = (userId: string) => {
   });
 
   const handleNewNotification = (newNotification: NotificationItem) => {
-    // Update List
     queryClient.setQueryData<InfiniteData<NotificationResponse>>(
       KEYS.list,
       (old) => {
@@ -146,7 +144,6 @@ export const useNotifications = (userId: string) => {
       }
     );
 
-    // Update Badge
     queryClient.setQueryData<UnreadCountResponse>(KEYS.unread, (old) =>
       old ? { ...old, data: { unreadCount: old.data.unreadCount + 1 } } : old
     );

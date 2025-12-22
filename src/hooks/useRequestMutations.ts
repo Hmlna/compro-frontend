@@ -5,7 +5,7 @@ import { deleteRequest } from "@/api/requests/deleteRequests";
 import { processApproval, markAsComplete } from "@/api/approval";
 import { downloadDocument } from "@/api/requests/downloadDocument";
 
-// --- DELETE ---
+// Delete
 export const useDeleteRequest = (onSuccessCallback?: () => void) => {
   const queryClient = useQueryClient();
 
@@ -22,7 +22,7 @@ export const useDeleteRequest = (onSuccessCallback?: () => void) => {
   });
 };
 
-// --- APPROVE / REJECT / REVISE ---
+// Approve / Reject / Revision
 export const useProcessApproval = (
   requestId: string,
   onSuccessCallback?: () => void
@@ -74,7 +74,7 @@ export const useProcessApproval = (
   });
 };
 
-// --- MARK COMPLETE ---
+// Mark Complete
 export const useMarkComplete = (
   requestId: string,
   onSuccessCallback?: () => void
@@ -103,7 +103,7 @@ export const useMarkComplete = (
   });
 };
 
-// --- DOWNLOAD ---
+// Download
 export const useDownloadDocument = (requestId: string) => {
   return useMutation({
     mutationFn: async (documentId: string) => {

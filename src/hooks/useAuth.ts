@@ -52,8 +52,6 @@ export function useAuth() {
       localStorage.setItem("token", res.access_token);
       localStorage.setItem("authLogin", JSON.stringify(res.user));
 
-      console.log("Login successful:", res);
-
       qc.setQueryData(["currentUser", res.access_token], res.user);
       qc.invalidateQueries({ queryKey: ["currentUser"] });
     },
@@ -67,7 +65,6 @@ export function useAuth() {
       localStorage.clear();
       qc.clear();
 
-      console.log("Logout successful");
       qc.setQueryData(["currentUser"], null);
       qc.invalidateQueries({ queryKey: ["currentUser"] });
     },

@@ -8,7 +8,7 @@ export const ROLE_OPTIONS: Role[] = [
 ];
 
 export type AuthUser = {
-  id: string; // UUID from API
+  id: string;
   email: string;
   role: Role;
   division?: string;

@@ -95,7 +95,7 @@ export const ManagerCard = ({ item, onClick }: CardProps) => (
         </div>
         <Badge
           variant="secondary"
-          className="shrink-0 bg-yellow-100 text-yellow-700 border-yellow-200 text-[10px] px-2 py-0.5 whitespace-nowrap"
+          className="shrink-0 bg-orange-100 text-orange-800 border-yellow-200 text-[10px] px-2 py-0.5 whitespace-nowrap"
         >
           PENDING MANAGER
         </Badge>
@@ -142,7 +142,7 @@ export const VPCard = ({ item, onClick }: CardProps) => (
         </div>
         <Badge
           variant="secondary"
-          className="shrink-0 bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100 text-[10px] px-2 py-0.5 whitespace-nowrap"
+          className="shrink-0 bg-orange-100 text-orange-800 border-yellow-200 text-[10px] px-2 py-0.5 whitespace-nowrap"
         >
           PENDING VP
         </Badge>
@@ -192,7 +192,7 @@ export const ITManagerCard = ({ item, onClick }: CardProps) => (
         </div>
         <Badge
           variant="secondary"
-          className="shrink-0 bg-orange-100 text-orange-800 border-yellow-200 hover:bg-yellow-100 text-[10px] px-2 py-0.5 whitespace-nowrap"
+          className="shrink-0 bg-orange-100 text-orange-800 border-yellow-200 text-[10px] px-2 py-0.5 whitespace-nowrap"
         >
           NEEDS MAPPING
         </Badge>

@@ -71,7 +71,6 @@ export function AssignDevDialog({
       queryClient.invalidateQueries({ queryKey: ["requests"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       onOpenChange(false);
-      // Reset form
       setSelectedDevs([]);
       setNotes("");
 

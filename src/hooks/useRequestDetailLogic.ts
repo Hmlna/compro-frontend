@@ -20,19 +20,16 @@ export const useRequestDetailLogic = () => {
   const location = useLocation();
   const { user } = useAuth();
 
-  // --- Local State ---
   const [reason, setReason] = useState("");
   const [showReasonInput, setShowReasonInput] = useState(false);
   const [pendingAction, setPendingAction] = useState<
     "reject" | "revision" | null
   >(null);
 
-  // Dialog States
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false);
 
-  // --- Data Fetching ---
   const {
     data: displayData,
     isLoading: isQueryLoading,
@@ -42,7 +39,6 @@ export const useRequestDetailLogic = () => {
   const { data: progressData, isLoading: isProgressLoading } =
     useRequestProgress(id);
 
-  // --- Navigation & Actions ---
   const handleBack = () => {
     if (location.state?.from) {
       navigate(location.state.from);
@@ -52,7 +48,6 @@ export const useRequestDetailLogic = () => {
       navigate(-1);
       return;
     }
-    // Fallback based on role
     switch (user?.role) {
       case "USER":
         navigate("/requests");
@@ -68,7 +63,6 @@ export const useRequestDetailLogic = () => {
     setPendingAction(null);
   };
 
-  // --- Mutations ---
   const deleteMutation = useDeleteRequest(() => handleBack());
 
   const approvalMutation = useProcessApproval(id!, () => {
@@ -81,7 +75,6 @@ export const useRequestDetailLogic = () => {
     handleBack();
   });
 
-  // --- Logic & Permissions ---
   const isITUser = user?.role === "MANAGER_IT" || user?.role === "DEV";
   const isBusinessUser = !isITUser;
   const isManager = user?.role === "MANAGER";
@@ -90,7 +83,6 @@ export const useRequestDetailLogic = () => {
   const isDev = user?.role === "DEV";
   const isRequester = user?.id === displayData?.userId;
 
-  // Actions
   const canApprove =
     (isManager && displayData?.status === "PENDING_MANAGER") ||
     (isVP && displayData?.status === "PENDING_VP");
@@ -103,12 +95,10 @@ export const useRequestDetailLogic = () => {
       displayData?.status || ""
     );
 
-  // Validation
   const reasonLength = reason.trim().length;
   const isLengthValid = reasonLength >= MIN_NOTE_LENGTH;
   const remainingChars = Math.max(0, MIN_NOTE_LENGTH - reasonLength);
 
-  // Revisions Count Logic
   const MAX_MANAGER_REVISIONS = 3;
   const MAX_VP_REVISIONS = 2;
   const currentRevisionCount = isManager
@@ -119,7 +109,6 @@ export const useRequestDetailLogic = () => {
   const maxRevisions = isManager ? MAX_MANAGER_REVISIONS : MAX_VP_REVISIONS;
   const isRevisionLimitReached = (currentRevisionCount || 0) >= maxRevisions;
 
-  // --- Computed Memos ---
   const latestRevisionNote = useMemo(() => {
     if (!displayData?.approvalLogs?.length) return null;
     const isRevisionOrReject =
@@ -154,7 +143,6 @@ export const useRequestDetailLogic = () => {
     [displayData]
   );
 
-  // --- Handlers ---
   const handleActionClick = (action: "approve" | "reject" | "revision") => {
     if (action === "approve") setIsApproveDialogOpen(true);
     else {
@@ -184,8 +172,6 @@ export const useRequestDetailLogic = () => {
     progressData,
     isQueryLoading,
     isSyncing: isFetching || isProgressLoading,
-
-    // UI Logic
     reason,
     setReason,
     showReasonInput,
@@ -201,7 +187,6 @@ export const useRequestDetailLogic = () => {
       setIsCompleteDialogOpen,
     },
 
-    // Validations & Permissions
     permissions: {
       isITUser,
       isBusinessUser,
@@ -216,13 +201,10 @@ export const useRequestDetailLogic = () => {
     validation: { isLengthValid, remainingChars },
     revisionInfo: { currentRevisionCount, maxRevisions },
 
-    // Computed
     computed: { latestRevisionNote, pdfApproval, pdfForm, userAttachments },
 
-    // Mutations
     mutations: { deleteMutation, approvalMutation, completeMutation },
 
-    // Handlers
     handleActionClick,
     submitReason,
   };

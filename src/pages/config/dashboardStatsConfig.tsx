@@ -56,7 +56,7 @@ export const ROLE_STATS_CONFIG: Record<string, StatConfigItem[]> = {
       label: "Pending Approval",
       dataKey: "pendingApproval",
       icon: Clock,
-      color: "text-yellow-500",
+      color: "text-orange-800",
     },
     {
       label: "Total Requests",

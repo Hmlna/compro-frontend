@@ -27,12 +27,12 @@ export const DeveloperWorkloadWidget = ({
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <CardTitle className="text-lg flex items-center gap-2">
-              <UserCog className="w-5 h-5 text-indigo-600" />
+              <UserCog className="w-5 h-5 text-black-600" />
               Developer Workload
             </CardTitle>
             <CardDescription>Active CRs per developer</CardDescription>
           </div>
-          <BarChart3 className="w-4 h-4 text-slate-400" />
+          <BarChart3 className="w-4 h-4 text-black-400" />
         </div>
       </CardHeader>
       <CardContent className="grid gap-4">
@@ -47,15 +47,15 @@ export const DeveloperWorkloadWidget = ({
             return (
               <div
                 key={index}
-                className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100"
+                className="flex items-center justify-between p-2 rounded-lg hover:bg-black-50 transition-colors border border-transparent hover:border-black-100"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-50 border border-indigo-100 shrink-0">
-                    <User className="h-5 w-5 text-indigo-600" />
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-black-50 border border-black-100 shrink-0">
+                    <User className="h-5 w-5 text-black-600" />
                   </div>
 
                   <div className="space-y-0.5">
-                    <p className="text-sm font-medium leading-none text-slate-700">
+                    <p className="text-sm font-medium leading-none text-black-700">
                       {dev.developer}
                     </p>
                     <p className="text-xs text-muted-foreground">
@@ -82,8 +82,8 @@ export const DeveloperWorkloadWidget = ({
 };
 
 const getBadgeColor = (count: number) => {
-  if (count === 0) return "bg-slate-100 text-slate-600 border-slate-200";
-  if (count < 3) return "bg-green-100 text-green-700 border-green-200"; // Low load
-  if (count < 5) return "bg-yellow-100 text-yellow-700 border-yellow-200"; // Medium load
-  return "bg-red-100 text-red-700 border-red-200"; // High load
+  if (count === 0) return "bg-black-100 text-black-600 border-black-200";
+  if (count < 3) return "bg-green-100 text-green-700 border-green-200";
+  if (count < 5) return "bg-yellow-100 text-yellow-700 border-yellow-200";
+  return "bg-red-100 text-red-700 border-red-200";
 };

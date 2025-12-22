@@ -3,7 +3,6 @@ import { Loader2, FileText, Download, FileCode, FileCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDownloadDocument } from "@/hooks/useRequestMutations";
 
-// --- Helpers ---
 const formatFileSize = (bytes: number) => {
   if (bytes === 0) return "0 Bytes";
   const k = 1024;
@@ -12,7 +11,6 @@ const formatFileSize = (bytes: number) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 };
 
-// --- Simple Field Components ---
 export const InfoField = ({ label, value, icon: Icon }: any) => (
   <div className="space-y-1">
     <label className="text-xs font-semibold text-muted-foreground uppercase flex items-center gap-1.5">
@@ -38,7 +36,6 @@ export const TextBlock = ({ label, value }: any) => (
   </div>
 );
 
-// --- Complex Attachment Components ---
 export const AttachmentItem = ({
   doc,
   requestId,

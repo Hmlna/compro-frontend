@@ -76,7 +76,6 @@ const NewRequestPage = () => {
     mutationFn: createRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["requests"] });
-      console.log("Request created successfully!");
     },
     onError: (error) => toast.error(error.message),
   });
@@ -88,10 +87,9 @@ const NewRequestPage = () => {
       queryClient.invalidateQueries({ queryKey: ["requests"] });
       queryClient.invalidateQueries({ queryKey: ["request", currentId] });
       queryClient.invalidateQueries({ queryKey: ["request-detail"] });
-      console.log("Request updated successfully!");
     },
     onError: (error) => {
-      console.log(error.message);
+      console.error(error.message);
     },
   });
 
@@ -101,7 +99,6 @@ const NewRequestPage = () => {
       queryClient.invalidateQueries({ queryKey: ["requests"] });
       queryClient.invalidateQueries({ queryKey: ["request", currentId] });
       queryClient.invalidateQueries({ queryKey: ["request-detail"] });
-      console.log("Request submitted for approval!");
     },
     onError: (error) => {
       console.error(error.message);
@@ -113,7 +110,6 @@ const NewRequestPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["requests"] });
       queryClient.invalidateQueries({ queryKey: ["request", currentId] });
-      console.log("Request resubmitted successfully!");
     },
     onError: (error) => {
       console.error(error.message);
@@ -272,7 +268,6 @@ const NewRequestPage = () => {
             filePreviews={selectedFiles}
             // Existing Files (From Server)
             existingFiles={existingRequest?.documents || []}
-            // Delete Logic
             onRemoveExistingFile={(docId) => deleteDocMutation.mutate(docId)}
             isDeleting={deleteDocMutation.isPending}
             requestId={currentId}

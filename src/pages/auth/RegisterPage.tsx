@@ -68,11 +68,6 @@ export default function RegisterPage() {
     <div className="sm:mx-auto sm:w-full sm:max-w-sm">
       {/* Header */}
       <div className="text-center mb-6">
-        <img
-          alt="Logo"
-          src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-          className="mx-auto h-10 w-auto"
-        />
         <h2 className="mt-4 text-2xl font-bold">Create an account</h2>
       </div>
 
@@ -131,7 +126,7 @@ export default function RegisterPage() {
               name="division"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Division</FormLabel>
+                  <FormLabel>Division/Unit</FormLabel>
                   <FormControl>
                     <Input type="text" {...field} />
                   </FormControl>
@@ -146,9 +141,7 @@ export default function RegisterPage() {
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Role <span className="text-red-500">*</span>
-                  </FormLabel>
+                  <FormLabel>Role</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger className="w-full mt-1">
@@ -170,11 +163,7 @@ export default function RegisterPage() {
           </div>
 
           {/* Submit */}
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-indigo-600 text-white hover:bg-indigo-500"
-          >
+          <Button type="submit" disabled={isLoading} className="w-full">
             {isLoading ? "Creating account..." : "Create account"}
           </Button>
         </form>
@@ -185,9 +174,9 @@ export default function RegisterPage() {
         Already have an account?{" "}
         <Link
           to="/login"
-          className="text-indigo-600 hover:text-indigo-500 font-semibold"
+          className="text-blue-700 hover:text-blue-500 font-semibold"
         >
-          Sign In
+          Sign in
         </Link>
       </p>
     </div>

@@ -5,7 +5,6 @@ import type { RequestStatus } from "@/types/request";
 export const useRequestFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // 1. Parse current values from URL (Single Source of Truth)
   const filters = {
     page: Number(searchParams.get("page")) || 1,
     limit: Number(searchParams.get("limit")) || 10,
@@ -15,7 +14,6 @@ export const useRequestFilters = () => {
     sortOrder: (searchParams.get("sortOrder") as "asc" | "desc") || "desc",
   };
 
-  // 2. Helper to update URL params
   const setFilters = useCallback(
     (newFilters: Partial<typeof filters>) => {
       const newParams = new URLSearchParams(searchParams);
@@ -28,7 +26,6 @@ export const useRequestFilters = () => {
         }
       });
 
-      // Reset to page 1 if any filter changes (except page itself)
       if (
         !newFilters.page &&
         (newFilters.search !== undefined || newFilters.status !== undefined)

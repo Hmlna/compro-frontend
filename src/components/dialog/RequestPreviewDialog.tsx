@@ -26,7 +26,6 @@ export const RequestPreviewDialog = ({
   basicOnly?: boolean;
   confirmDisabled?: boolean;
 }) => {
-  // keys we consider "basic"
   const basicKeys: (keyof RequestFormSchema)[] = [
     "requester1",
     "requester2",

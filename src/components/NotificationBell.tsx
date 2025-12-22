@@ -36,7 +36,6 @@ export default function NotificationBell({ userId }: NotificationBellProps) {
     socket.emit("join", userId);
 
     socket.on("notification", (data: NotificationItem) => {
-      console.log("New Notification:", data);
       handleNewNotification(data);
     });
 

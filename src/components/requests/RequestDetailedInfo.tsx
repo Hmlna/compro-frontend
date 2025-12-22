@@ -40,14 +40,12 @@ interface ExistingDocument {
 
 interface RequestDetailedInfoProps {
   control: Control<RequestFormSchema>;
-  // Handling New Files
   onFilesChange?: (files: File[]) => void;
-  filePreviews: File[]; // These are the NEW files (Draft)
+  filePreviews: File[];
 
-  // Handling Existing Files
-  existingFiles?: ExistingDocument[]; // Files from Server
-  onRemoveExistingFile?: (docId: string) => void; // API Call trigger
-  isDeleting?: boolean; // Loading state for delete
+  existingFiles?: ExistingDocument[];
+  onRemoveExistingFile?: (docId: string) => void;
+  isDeleting?: boolean;
   requestId?: string | null;
 }
 
@@ -62,13 +60,11 @@ export const RequestDetailedInfo = ({
 }: RequestDetailedInfoProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Helper to calculate total current files
   const totalFilesCount = existingFiles.length + filePreviews.length;
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
 
-    // 1. Validate Max 5 Files Total (Existing + New + Incoming)
     if (totalFilesCount + files.length > 5) {
       toast.error("You can only have a maximum of 5 files total.");
       return;
@@ -77,7 +73,6 @@ export const RequestDetailedInfo = ({
     const validFiles: File[] = [];
 
     files.forEach((file) => {
-      // 2. Validate Max 10MB Size
       if (file.size > 10 * 1024 * 1024) {
         toast.error(`File ${file.name} is too large. Max 10MB allowed.`);
       } else {
@@ -90,11 +85,9 @@ export const RequestDetailedInfo = ({
       if (onFilesChange) onFilesChange(updatedFiles);
     }
 
-    // Reset input value to allow selecting the same file again if needed
     e.target.value = "";
   };
 
-  // Removes a NEW (Draft) file
   const removeNewFile = (indexToRemove: number) => {
     const updatedFiles = filePreviews.filter((_, idx) => idx !== indexToRemove);
     if (onFilesChange) onFilesChange(updatedFiles);
@@ -104,7 +97,6 @@ export const RequestDetailedInfo = ({
     fileInputRef.current?.click();
   };
 
-  // Helper to format bytes to MB
   const formatSize = (bytes?: number) => {
     if (!bytes) return "";
     return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
@@ -116,9 +108,7 @@ export const RequestDetailedInfo = ({
       return await downloadDocument(requestId, docId);
     },
     onSuccess: (response) => {
-      // 1. Validate response structure
       if (response && response.downloadUrl) {
-        // 2. Open URL
         window.open(response.downloadUrl, "_blank");
       } else {
         toast.error("Download link not found in server response.");
@@ -139,7 +129,7 @@ export const RequestDetailedInfo = ({
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* --- Form Fields (Unchanged) --- */}
+        {/* Form Fields */}
         <FormField
           control={control}
           name="categoryImpact"
@@ -270,7 +260,7 @@ export const RequestDetailedInfo = ({
           )}
         />
 
-        {/* --- ATTACHMENT SECTION --- */}
+        {/* Attachment Section */}
         <div className="space-y-4 pt-4 border-t">
           <div className="flex flex-col gap-1">
             <h3 className="font-semibold text-sm">
@@ -291,7 +281,6 @@ export const RequestDetailedInfo = ({
               multiple
               onChange={handleFileChange}
               accept=".pdf,.doc,.docx, .xls, .xlsx, .jpg, .png, .gif, .txt"
-              // Disable input if limit reached
               disabled={totalFilesCount >= 5}
             />
 
@@ -312,7 +301,6 @@ export const RequestDetailedInfo = ({
           </div>
 
           <div className="space-y-2">
-            {/* 1. EXISTING FILES (From Server) */}
             {existingFiles.map((file) => (
               <div
                 key={file.id}
@@ -359,7 +347,6 @@ export const RequestDetailedInfo = ({
               </div>
             ))}
 
-            {/* 2. NEW FILES (Pending Upload) */}
             {filePreviews.map((file, idx) => (
               <div
                 key={`new-${idx}`}

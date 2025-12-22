@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/incompatible-library */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -24,7 +24,6 @@ export const useRequestForm = (isEditMode = false) => {
     servicesNeeded: "",
   };
 
-  // hydrate from localStorage if available
   let saved: Partial<RequestFormSchema> | null = null;
   if (!isEditMode) {
     try {
@@ -44,22 +43,18 @@ export const useRequestForm = (isEditMode = false) => {
     reValidateMode: "onChange",
   });
 
-  // autosave (debounced)
   useEffect(() => {
     if (isEditMode) return;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let t: any = null;
     const sub = form.watch((values) => {
       if (t) clearTimeout(t);
       t = setTimeout(() => {
         try {
-          // We intentionally don't do complex transformation here,
-          // we handle the "read" side in the hydration step above.
           localStorage.setItem(STORAGE_KEY, JSON.stringify(values));
         } catch {
           /* ignore */
         }
-      }, 500); // Increased debounce to prevent rapid-fire saves
+      }, 500);
     });
     return () => {
       sub.unsubscribe();
@@ -73,7 +68,6 @@ export const useRequestForm = (isEditMode = false) => {
     } catch {
       /* empty */
     }
-    // Hard reset the form to initial defaults
     form.reset(initialDefaults);
   };
 

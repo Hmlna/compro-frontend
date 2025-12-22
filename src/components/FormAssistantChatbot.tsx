@@ -2,10 +2,8 @@ import { useEffect } from "react";
 
 export const FormAssistantChatbot = () => {
   useEffect(() => {
-    // Defined in your config object below
     const WIDGET_ROOT_ID = "JotformAgent-019b1cfd770f77a5ba98b08b3fb4724e3db2";
 
-    // 1. Helper Functions
     const sanitizeVariables = (url: string, width: number, height: number) => {
       try {
         const sanitizedUrl = new URL(url);
@@ -19,7 +17,6 @@ export const FormAssistantChatbot = () => {
       }
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handlePictureInPictureRequest = async (event: MessageEvent) => {
       if (event.data.type !== "jf-request-pip-window") {
         return;
@@ -68,7 +65,6 @@ export const FormAssistantChatbot = () => {
       }
     };
 
-    // 2. Chatbot Initialization Logic
     const initChatbot = () => {
       // @ts-expect-error - AgentInitializer is added to window by the external script
       if (window.AgentInitializer) {
@@ -110,15 +106,13 @@ export const FormAssistantChatbot = () => {
       }
     };
 
-    // 3. Setup Listeners & Load Script
     window.addEventListener("message", handlePictureInPictureRequest);
 
     const scriptSrc =
       "https://www.noupe.com/s/umd/2adf5bfd6eb/for-embedded-agent.js";
 
-    // Check if script is already present
     if (document.querySelector(`script[src="${scriptSrc}"]`)) {
-      initChatbot(); // If script is cached, just init
+      initChatbot();
     } else {
       const script = document.createElement("script");
       script.src = scriptSrc;
@@ -127,11 +121,9 @@ export const FormAssistantChatbot = () => {
       document.head.appendChild(script);
     }
 
-    // 4. Cleanup on Unmount (Crucial for Single Page Apps)
     return () => {
       window.removeEventListener("message", handlePictureInPictureRequest);
 
-      // Force remove the widget element so it doesn't persist on other pages
       const widgetElement = document.getElementById(WIDGET_ROOT_ID);
       if (widgetElement) {
         widgetElement.remove();

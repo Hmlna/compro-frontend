@@ -8,14 +8,7 @@ import NotificationBell from "@/components/NotificationBell";
 
 export default function AppLayout() {
   const { user } = useAuth();
-  const {
-    canAccessDashboard,
-    canAccessRequests,
-    canAccessManager,
-    canAccessVP,
-    canAccessMapping,
-    canAccessDev,
-  } = useRoleAccess();
+  const { canAccessDashboard, canAccessRequests } = useRoleAccess();
 
   return (
     <div className="flex min-h-screen">
@@ -43,7 +36,7 @@ export default function AppLayout() {
               to="/requests"
             />
           )}
-          {canAccessManager && (
+          {/* {canAccessManager && (
             <SidebarItem
               icon={<LayoutDashboard size={20} />}
               text="Manager"
@@ -70,7 +63,7 @@ export default function AppLayout() {
               text="Dev"
               to="/developer"
             />
-          )}
+          )} */}
         </Sidebar>
 
         {/* Header */}
