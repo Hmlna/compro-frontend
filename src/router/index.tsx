@@ -5,13 +5,9 @@ import RegisterPage from "@/pages/auth/RegisterPage";
 import AppLayout from "@/components/layout/AppLayout";
 import ProtectedRoute from "@/router/ProtectedRoute";
 import DashboardPage from "@/pages/app/DashboardPage";
-import ManagerPage from "@/pages/app/ManagerPage";
-import VPPage from "@/pages/app/VPPage";
 import NotAuthorized from "@/pages/auth/NotAuthorized";
 import RequestPage from "@/pages/app/requests/RequestPage";
 import NewRequestPage from "@/pages/app/requests/NewRequestPage";
-import { MappingPage } from "@/pages/app/MappingPage";
-import { DeveloperPage } from "@/pages/app/DeveloperPage";
 import RequestDetailPage from "@/pages/app/requests/RequestDetailPage";
 
 export default function AppRouter() {
@@ -70,41 +66,6 @@ export default function AppRouter() {
           element={
             <ProtectedRoute roles={["USER"]}>
               <RequestPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/manager"
-          element={
-            <ProtectedRoute roles={["MANAGER", "MANAGER_IT", "VP"]}>
-              <ManagerPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/vp"
-          element={
-            <ProtectedRoute roles={["VP"]}>
-              <VPPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/mapping"
-          element={
-            <ProtectedRoute roles={["MANAGER_IT"]}>
-              <MappingPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/developer"
-          element={
-            <ProtectedRoute roles={["DEV"]}>
-              <DeveloperPage />
             </ProtectedRoute>
           }
         />
