@@ -10,7 +10,7 @@ import { Toaster } from "sonner";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter basename="/compro-frontend">
         <AppRouter />
         <Toaster richColors position="top-center" />
       </BrowserRouter>
