@@ -190,7 +190,9 @@ export default function Sidebar({ children }: SidebarProps) {
                   <AlertDialogAction
                     onClick={() => {
                       logout();
-                      window.location.replace("/login?logged_out=1");
+                      window.location.replace(
+                        `${import.meta.env.BASE_URL}login?logged_out=1`
+                      );
                     }}
                     className="bg-red-600 hover:bg-red-700"
                   >
