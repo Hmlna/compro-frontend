@@ -54,8 +54,8 @@ export default function RegisterPage() {
   const { handleSubmit, control } = form;
   const onSubmit = handleSubmit(async (values) => {
     try {
-      const res = await register(values);
-      toast.success(res.message);
+      await register(values);
+      toast.success("Registration successful");
       navigate("/login");
     } catch (err: any) {
       toast.error(
