@@ -9,6 +9,7 @@ import NotAuthorized from "@/pages/auth/NotAuthorized";
 import RequestPage from "@/pages/app/requests/RequestPage";
 import NewRequestPage from "@/pages/app/requests/NewRequestPage";
 import RequestDetailPage from "@/pages/app/requests/RequestDetailPage";
+import NotFoundPage from "@/pages/app/NotFoundPage";
 
 export default function AppRouter() {
   return (
@@ -72,6 +73,7 @@ export default function AppRouter() {
       </Route>
 
       <Route path="/not-authorized" element={<NotAuthorized />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
