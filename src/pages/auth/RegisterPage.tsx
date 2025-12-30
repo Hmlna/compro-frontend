@@ -67,8 +67,11 @@ export default function RegisterPage() {
   return (
     <div className="sm:mx-auto sm:w-full sm:max-w-sm">
       {/* Header */}
-      <div className="text-center mb-6">
-        <h2 className="mt-4 text-2xl font-bold">Create an account</h2>
+      <div className="flex flex-col space-y-2 text-center mb-6">
+        <h1 className="text-2xl font-bold tracking-tight">Create an account</h1>
+        <p className="text-sm text-muted-foreground">
+          Register an account to get started
+        </p>
       </div>
 
       <Form {...form}>
@@ -83,7 +86,7 @@ export default function RegisterPage() {
                 <FormItem className="sm:col-span-2">
                   <FormLabel>Full Name</FormLabel>
                   <FormControl>
-                    <Input type="text" {...field} />
+                    <Input placeholder="John Doe" type="text" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -98,7 +101,11 @@ export default function RegisterPage() {
                 <FormItem className="sm:col-span-2">
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" {...field} />
+                    <Input
+                      placeholder="name@example.com"
+                      type="email"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -113,7 +120,11 @@ export default function RegisterPage() {
                 <FormItem className="sm:col-span-2">
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" {...field} />
+                    <Input
+                      placeholder="Create a password"
+                      type="password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -128,7 +139,7 @@ export default function RegisterPage() {
                 <FormItem>
                   <FormLabel>Division/Unit</FormLabel>
                   <FormControl>
-                    <Input type="text" {...field} />
+                    <Input placeholder="e.g. IT Dept" type="text" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -164,7 +175,7 @@ export default function RegisterPage() {
 
           {/* Submit */}
           <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading ? "Creating account..." : "Create account"}
+            {isLoading ? "Signing up..." : "Sign up"}
           </Button>
         </form>
       </Form>
